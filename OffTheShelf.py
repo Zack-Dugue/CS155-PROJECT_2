@@ -39,11 +39,18 @@ def param_search(train_data,test_data,n):
                   "lr_all" : [0.001 , .005, .01, 0.02], "reg_bu" : [0.005,0.01,0.02,0.05,.1,.2],"reg_bi" :[0.005,0.01,0.02,0.05,.1,.2],"reg_pu" :[0.005,0.01,0.02,0.05,.1,.2],"reg_qi" : [0.005,0.01,0.02,0.05,.1,.2]}
     model = SP.model_selection.search.RandomizedSearchCV(PA.SVD, param_dict, n_iter=n,  measures=['mse'], cv=None, refit=True, return_train_measures=True, n_jobs=-1,joblib_verbose=5)
     model.fit(train_data)
-    test_dataset = test_data.build_full_trainset().build_testset()
-    predictions = model.test(test_dataset)
-    MSE = ACC.mse(predictions)
-    print(f"MSE: {MSE}")
     print(f"Model Params = {model.best_params['mse']}")
+    train_dataset = train_data.build_full_trainset().build_testset()
+    print(f"E_IN:")
+    predictions = model.test(train_dataset)
+    MSE = ACC.mse(predictions)
+
+    test_dataset = test_data.build_full_trainset().build_testset()
+    print(f"E_OUT:")
+    predictions = model.test(test_dataset)
+
+    MSE = ACC.mse(predictions)
+
     return model
 
 def experiment(m,n):
